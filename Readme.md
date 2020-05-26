@@ -1,8 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Артем Капитанов](https://up.htmlacademy.ru/javascript/20/user/1192723).
-* Наставник: `Неизвестно`.
-
+* Наставник: [Сергей Рожков](https://up.htmlacademy.ru/javascript/20/user/1069033).
 ---
 
 _Не удаляйте и не обращайте внимание на файлы:_<br>
