@@ -74,6 +74,13 @@ var ADVERT_TYPES = [
   'bungalo'
 ];
 
+var ADVERT_TYPES_TEXT = {
+  'palace': 'Дворец',
+  'flat': 'Квартира',
+  'house': 'Дом',
+  'bungalo': 'Бунгало'
+};
+
 var ADVERT_REGISTRATION_TIMES = [
   '12:00',
   '13:00',
@@ -108,6 +115,10 @@ var advertPinTemplateElement = document.querySelector('#pin')
   .content
   .querySelector('.map__pin');
 
+var advertCardTemplateElement = document.querySelector('#card')
+  .content
+  .querySelector('.map__card');
+
 var getRandomInt = function (min, max) {
   return min + Math.floor((max - min) * Math.random());
 };
@@ -121,7 +132,7 @@ var getRandomElements = function (arr, count) {
   var result = [];
   for (var i = 0; i < count; i++) {
     var elementInd = getRandomInt(0, tmp.length - 1);
-    result.concat(tmp.splice(elementInd, 1));
+    result = result.concat(tmp.splice(elementInd, 1));
   }
   return result;
 };
@@ -178,9 +189,109 @@ var renderAdvertPinsOnMap = function (adverts) {
   mapPinsElement.appendChild(fragment);
 };
 
+var renderAdvertCard = function (advert) {
+  var cardElement = advertCardTemplateElement.cloneNode(true);
+
+  addTextContentToPopupCard(advert.offer.title, cardElement.querySelector('.popup__title'));
+
+  addTextContentToPopupCard(advert.offer.address, cardElement.querySelector('.popup__text--address'));
+
+  addTextContentToPopupCard(advert.offer.price + ' ₽/ночь', cardElement.querySelector('.popup__text--price'));
+
+  renderAdvertTypeForCard(advert, cardElement);
+
+  var capacityText = advert.offer.rooms + ' комнаты для ' + advert.offer.guests + ' гостей';
+  addTextContentToPopupCard(capacityText, cardElement.querySelector('.popup__text--capacity'));
+
+  var timeText = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
+  addTextContentToPopupCard(timeText, cardElement.querySelector('.popup__text--time'));
+
+  renderAdvertFeaturesForCard(advert, cardElement);
+
+  addTextContentToPopupCard(advert.offer.description, cardElement.querySelector('.popup__description'));
+
+  addTextContentToPopupCard(advert.author.avatar, cardElement.querySelector('.popup__avatar'));
+
+  renderAdvertPhotosForCard(advert, cardElement);
+
+  return cardElement;
+};
+
+var renderAdvertPhotosForCard = function (advert, cardElement) {
+  var advertCardPhotosElement = cardElement.querySelector('.popup__photos');
+  if (advert.offer.photos.length > 0) {
+    var fragment = document.createDocumentFragment();
+
+    advert.offer.photos.forEach(function (photo, ind) {
+      fragment.appendChild(renderAdvertCardPhoto(photo, ind, advert));
+    });
+
+    advertCardPhotosElement.innerHTML = '';
+    advertCardPhotosElement.appendChild(fragment);
+  } else {
+    advertCardPhotosElement.remove();
+  }
+};
+
+var renderAdvertCardPhoto = function (photo, ind, advert) {
+  var advertImgElement = advertCardTemplateElement.querySelector('.popup__photo').cloneNode(true);
+  advertImgElement.src = photo;
+  advertImgElement.alt = advert.offer.title + ' фото ' + (ind + 1);
+
+  return advertImgElement;
+};
+
+var renderAdvertFeaturesForCard = function (advert, cardElement) {
+  var advertCardFeaturesElement = cardElement.querySelector('.popup__features');
+  if (advert.offer.features.length > 0) {
+    var fragment = document.createDocumentFragment();
+
+    advert.offer.features.forEach(function (feature) {
+      fragment.appendChild(renderAdvertCardFeature(feature));
+    });
+
+    advertCardFeaturesElement.innerHTML = '';
+    advertCardFeaturesElement.appendChild(fragment);
+  } else {
+    advertCardFeaturesElement.remove();
+  }
+};
+
+var renderAdvertCardFeature = function (feature) {
+  var advertFeatureElement = advertCardTemplateElement.querySelector('.popup__feature').cloneNode(true);
+  advertFeatureElement.className = '';
+  advertFeatureElement.classList.add('popup__feature');
+  advertFeatureElement.classList.add('popup__feature--' + feature);
+
+  return advertFeatureElement;
+};
+
+var renderAdvertTypeForCard = function (advert, cardElement) {
+  var popupTypeElement = cardElement.querySelector('.popup__type');
+  if (advert.offer.type !== '' && typeof ADVERT_TYPES_TEXT[advert.offer.type] !== 'undefined') {
+    popupTypeElement.textContent = ADVERT_TYPES_TEXT[advert.offer.type];
+  } else {
+    popupTypeElement.remove();
+  }
+};
+
+var addTextContentToPopupCard = function (content, element) {
+  if (typeof content !== 'undefined' && content !== '') {
+    element.textContent = content;
+  } else {
+    element.remove();
+  }
+};
+
 var init = function () {
   var adverts = generateAdverts(ADVERTS_COUNT);
   renderAdvertPinsOnMap(adverts);
+
+  if (adverts.length > 0) {
+    var advertCard = renderAdvertCard(adverts[0]);
+
+    mapPinsElement.insertAdjacentElement('afterend', advertCard);
+  }
 
   mapElement.classList.remove('map--faded');
 };
