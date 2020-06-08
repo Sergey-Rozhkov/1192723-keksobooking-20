@@ -99,50 +99,54 @@ var MAX_GUESTS = 10;
 var MIN_Y = 130;
 var MAX_Y = 630;
 
-var randomInt = function (min, max) {
+var mapElement = document.querySelector('.map');
+var mapWidth = mapElement.clientWidth;
+
+var mapPinsElement = document.querySelector('.map__pins');
+
+var advertPinTemplateElement = document.querySelector('#pin')
+  .content
+  .querySelector('.map__pin');
+
+var getRandomInt = function (min, max) {
   return min + Math.floor((max - min) * Math.random());
 };
 
-var randomPositiveInt = function (max) {
-  return Math.floor(max * Math.random());
-};
-
 var getRandomElement = function (arr) {
-  return arr[randomPositiveInt(arr.length)];
+  return arr[getRandomInt(0, arr.length)];
 };
 
 var getRandomElements = function (arr, count) {
-  var tempArr = arr;
-  var resArr = [];
+  var tmp = JSON.parse(JSON.stringify(arr));
+  var result = [];
   for (var i = 0; i < count; i++) {
-    var elementInd = randomInt(0, tempArr.length - 1);
-    resArr.push(tempArr[elementInd]);
-    tempArr.splice(elementInd, 1);
+    var elementInd = getRandomInt(0, tmp.length - 1);
+    result.concat(tmp.splice(elementInd, 1));
   }
-  return resArr;
+  return result;
 };
 
 var generateAdverts = function (limit) {
-  var advertsArr = [];
+  var result = [];
   for (var i = 0; i < limit; i++) {
-    var locationX = randomInt(0, mapWidth);
-    var locationY = randomInt(MIN_Y, MAX_Y);
-    advertsArr.push({
+    var locationX = getRandomInt(0, mapWidth);
+    var locationY = getRandomInt(MIN_Y, MAX_Y);
+    result.push({
       author: {
         avatar: 'img/avatars/user0' + (i + 1) + '.png'
       },
       offer: {
         title: getRandomElement(TITLES),
         address: locationX + ', ' + locationY,
-        price: randomInt(MIN_PRICE, MAX_PRICE),
+        price: getRandomInt(MIN_PRICE, MAX_PRICE),
         type: getRandomElement(ADVERT_TYPES),
-        rooms: randomInt(MIN_ROOMS, MAX_ROOMS),
-        guests: randomInt(MIN_GUESTS, MAX_GUESTS),
+        rooms: getRandomInt(MIN_ROOMS, MAX_ROOMS),
+        guests: getRandomInt(MIN_GUESTS, MAX_GUESTS),
         checkin: getRandomElement(ADVERT_REGISTRATION_TIMES),
         checkout: getRandomElement(ADVERT_REGISTRATION_TIMES),
-        features: getRandomElements(FEATURES, randomInt(0, FEATURES.length - 1)),
+        features: getRandomElements(FEATURES, getRandomInt(0, FEATURES.length - 1)),
         description: getRandomElement(DESCRIPTIONS),
-        photos: getRandomElements(PHOTOS, randomInt(0, 10)),
+        photos: getRandomElements(PHOTOS, getRandomInt(0, 10)),
       },
       location: {
         x: locationX,
@@ -150,7 +154,7 @@ var generateAdverts = function (limit) {
       }
     });
   }
-  return advertsArr;
+  return result;
 };
 
 var renderAdvertPin = function (advert) {
@@ -174,17 +178,11 @@ var renderAdvertPinsOnMap = function (adverts) {
   mapPinsElement.appendChild(fragment);
 };
 
-var mapElement = document.querySelector('.map');
-var mapWidth = mapElement.clientWidth;
+var init = function () {
+  var adverts = generateAdverts(ADVERTS_COUNT);
+  renderAdvertPinsOnMap(adverts);
 
-var mapPinsElement = document.querySelector('.map__pins');
+  mapElement.classList.remove('map--faded');
+};
 
-var adverts = generateAdverts(ADVERTS_COUNT);
-
-var advertPinTemplateElement = document.querySelector('#pin')
-  .content
-  .querySelector('.map__pin');
-
-renderAdvertPinsOnMap(adverts);
-
-mapElement.classList.remove('map--faded');
+init();
