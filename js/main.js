@@ -105,6 +105,10 @@ var MIN_GUESTS = 1;
 var MAX_GUESTS = 10;
 var MIN_Y = 130;
 var MAX_Y = 630;
+var MAIN_PIN_HEIGHT = 64;
+var MAIN_PIN_WIDTH = 62;
+var MAIN_PIN_DISABLED_HEIGHT = 200;
+var MAIN_PIN_DISABLED_WIDTH = 200;
 
 var mapElement = document.querySelector('.map');
 var mapWidth = mapElement.clientWidth;
@@ -118,6 +122,21 @@ var advertPinTemplateElement = document.querySelector('#pin')
 var advertCardTemplateElement = document.querySelector('#card')
   .content
   .querySelector('.map__card');
+
+var addFormElement = document.querySelector('.ad-form');
+var adFormInputElements = addFormElement.querySelectorAll('.ad-form input');
+var adFormSelectElements = addFormElement.querySelectorAll('.ad-form select');
+var adFormTextareaElements = addFormElement.querySelectorAll('.ad-form textarea');
+var adFormSubmitElement = addFormElement.querySelector('.ad-form__submit');
+
+var filterFormInputElements = document.querySelectorAll('.map__filters input');
+var filterFormSelectElements = document.querySelectorAll('.map__filters select');
+
+var mainPinElement = document.querySelector('.map__pin--main');
+var addressFieldElement = document.querySelector('input[name=address]');
+
+var addFormHousingRoomsElement = document.querySelector('select[name=rooms]');
+var addFormHousingCapacityElement = document.querySelector('select[name=capacity]');
 
 var getRandomInt = function (min, max) {
   return min + Math.floor((max - min) * Math.random());
@@ -283,6 +302,125 @@ var addTextContentToPopupCard = function (content, element) {
   }
 };
 
+var disableInputs = function (elements) {
+  elements.forEach(function (input) {
+    addDisable(input);
+  });
+};
+
+var enableInputs = function (elements) {
+  elements.forEach(function (input) {
+    removeDisable(input);
+  });
+};
+
+var addDisable = function (element) {
+  element.disabled = true;
+};
+
+var removeDisable = function (element) {
+  element.disabled = false;
+};
+
+var disableInputsOnAddForm = function () {
+  disableInputs(adFormInputElements);
+  disableInputs(adFormSelectElements);
+  disableInputs(adFormTextareaElements);
+};
+
+var disableInputsOnFilterForm = function () {
+  disableInputs(filterFormInputElements);
+  disableInputs(filterFormSelectElements);
+};
+
+var enableInputsOnAddForm = function () {
+  enableInputs(adFormInputElements);
+  enableInputs(adFormSelectElements);
+  enableInputs(adFormTextareaElements);
+};
+
+var enableInputsOnFilterForm = function () {
+  enableInputs(filterFormInputElements);
+  enableInputs(filterFormSelectElements);
+};
+
+var activateMap = function () {
+  mapElement.classList.remove('map--faded');
+  enableInputsOnAddForm();
+  enableInputsOnFilterForm();
+};
+
+var fillAddressField = function () {
+  var coords = getMainPinCoordinates();
+  addressFieldElement.value = coords.x + ', ' + coords.y;
+};
+
+var isDisabledMap = function () {
+  return mapElement.classList.contains('map--faded');
+};
+
+var getMainPinCoordinates = function () {
+  if (isDisabledMap()) {
+    return {
+      x: mainPinElement.offsetLeft + MAIN_PIN_DISABLED_WIDTH / 2,
+      y: mainPinElement.offsetTop + MAIN_PIN_DISABLED_HEIGHT
+    };
+  }
+
+  return {
+    x: mainPinElement.offsetLeft + MAIN_PIN_WIDTH / 2,
+    y: mainPinElement.offsetTop + MAIN_PIN_HEIGHT
+  };
+};
+
+var addFormSubmit = function (evt) {
+  evt.preventDefault();
+  if (!addFormElement.checkValidity()) {
+    return;
+  }
+
+  addFormElement.submit();
+};
+
+mainPinElement.addEventListener('mousedown', function (evt) {
+  if (evt.button === 0) {
+    activateMap();
+    fillAddressField();
+  }
+});
+
+mainPinElement.addEventListener('keydown', function (evt) {
+  if (evt.key === 'Enter') {
+    activateMap();
+  }
+});
+
+addFormHousingCapacityElement.addEventListener('change', function () {
+  var roomsCount = addFormHousingRoomsElement.value;
+  var capacityCount = addFormHousingCapacityElement.value;
+  switch (roomsCount) {
+    case '1':
+    case '2':
+    case '3':
+      if (capacityCount === '0' || capacityCount > roomsCount) {
+        var errorMsg = roomsCount === '1' ? 'Можно выбрать только одного гостя' : 'Можно выбрать до ' + roomsCount + ' гостей';
+        addFormHousingCapacityElement.setCustomValidity(errorMsg);
+      } else {
+        addFormHousingCapacityElement.setCustomValidity('');
+      }
+      break;
+    case '100':
+      if (capacityCount !== '0') {
+        addFormHousingCapacityElement.setCustomValidity('Только не для гостей');
+      } else {
+        addFormHousingCapacityElement.setCustomValidity('');
+      }
+      break;
+  }
+});
+
+adFormSubmitElement.addEventListener('click', addFormSubmit);
+
 var init = function () {
   var adverts = generateAdverts(ADVERTS_COUNT);
   renderAdvertPinsOnMap(adverts);
@@ -293,7 +431,9 @@ var init = function () {
     mapPinsElement.insertAdjacentElement('afterend', advertCard);
   }
 
-  mapElement.classList.remove('map--faded');
+  disableInputsOnAddForm();
+  disableInputsOnFilterForm();
+  fillAddressField();
 };
 
 init();
