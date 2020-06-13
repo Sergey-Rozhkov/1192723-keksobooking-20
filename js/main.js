@@ -109,6 +109,7 @@ var MAIN_PIN_HEIGHT = 64;
 var MAIN_PIN_WIDTH = 62;
 var MAIN_PIN_DISABLED_HEIGHT = 200;
 var MAIN_PIN_DISABLED_WIDTH = 200;
+var NOT_FOR_GUESTS_ROOMS_COUNT = 100;
 
 var mapElement = document.querySelector('.map');
 var mapWidth = mapElement.clientWidth;
@@ -345,6 +346,15 @@ var enableInputsOnFilterForm = function () {
 };
 
 var activateMap = function () {
+  var adverts = generateAdverts(ADVERTS_COUNT);
+  renderAdvertPinsOnMap(adverts);
+
+  if (adverts.length > 0) {
+    var advertCard = renderAdvertCard(adverts[0]);
+
+    mapPinsElement.insertAdjacentElement('afterend', advertCard);
+  }
+
   mapElement.classList.remove('map--faded');
   enableInputsOnAddForm();
   enableInputsOnFilterForm();
@@ -382,6 +392,23 @@ var addFormSubmit = function (evt) {
   addFormElement.submit();
 };
 
+var checkHousingCapacity = function () {
+  var roomsCount = addFormHousingRoomsElement.value;
+  var capacityCount = addFormHousingCapacityElement.value;
+  if (roomsCount < NOT_FOR_GUESTS_ROOMS_COUNT) {
+    if (capacityCount === '0' || capacityCount > roomsCount) {
+      var errorMsg = roomsCount === '1' ? 'Можно выбрать только одного гостя' : 'Можно выбрать до ' + roomsCount + ' гостей';
+      addFormHousingCapacityElement.setCustomValidity(errorMsg);
+    } else {
+      addFormHousingCapacityElement.setCustomValidity('');
+    }
+  } else if (capacityCount !== '0') {
+    addFormHousingCapacityElement.setCustomValidity('Только не для гостей');
+  } else {
+    addFormHousingCapacityElement.setCustomValidity('');
+  }
+};
+
 mainPinElement.addEventListener('mousedown', function (evt) {
   if (evt.button === 0) {
     activateMap();
@@ -395,42 +422,12 @@ mainPinElement.addEventListener('keydown', function (evt) {
   }
 });
 
-addFormHousingCapacityElement.addEventListener('change', function () {
-  var roomsCount = addFormHousingRoomsElement.value;
-  var capacityCount = addFormHousingCapacityElement.value;
-  switch (roomsCount) {
-    case '1':
-    case '2':
-    case '3':
-      if (capacityCount === '0' || capacityCount > roomsCount) {
-        var errorMsg = roomsCount === '1' ? 'Можно выбрать только одного гостя' : 'Можно выбрать до ' + roomsCount + ' гостей';
-        addFormHousingCapacityElement.setCustomValidity(errorMsg);
-      } else {
-        addFormHousingCapacityElement.setCustomValidity('');
-      }
-      break;
-    case '100':
-      if (capacityCount !== '0') {
-        addFormHousingCapacityElement.setCustomValidity('Только не для гостей');
-      } else {
-        addFormHousingCapacityElement.setCustomValidity('');
-      }
-      break;
-  }
-});
+addFormHousingRoomsElement.addEventListener('change', checkHousingCapacity);
+addFormHousingCapacityElement.addEventListener('change', checkHousingCapacity);
 
 adFormSubmitElement.addEventListener('click', addFormSubmit);
 
 var init = function () {
-  var adverts = generateAdverts(ADVERTS_COUNT);
-  renderAdvertPinsOnMap(adverts);
-
-  if (adverts.length > 0) {
-    var advertCard = renderAdvertCard(adverts[0]);
-
-    mapPinsElement.insertAdjacentElement('afterend', advertCard);
-  }
-
   disableInputsOnAddForm();
   disableInputsOnFilterForm();
   fillAddressField();
