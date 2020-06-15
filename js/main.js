@@ -432,9 +432,8 @@ var validateHousingCapacity = function () {
   }
 };
 
-var showAdvertCard = function (adverts, advertIndex) {
+var showAdvertCard = function (advertCard) {
   closeAdvertCard();
-  var advertCard = renderAdvertCard(adverts[advertIndex]);
   mapPinsElement.insertAdjacentElement('afterend', advertCard);
 
   var popupCardCloseElement = document.querySelector('.popup__close');
@@ -447,13 +446,13 @@ var bindMapPinEvents = function (adverts) {
   mapPinElements.forEach(function (mapPin) {
     mapPin.addEventListener('click', function (evt) {
       var advertIndex = evt.currentTarget.dataset.advert;
-      showAdvertCard(adverts, advertIndex);
+      showAdvertCard(adverts[advertIndex]);
     });
 
     mapPin.addEventListener('keydown', function (evt) {
       if (evt.key === 'Enter') {
         var advertIndex = evt.currentTarget.dataset.advert;
-        showAdvertCard(adverts, advertIndex);
+        showAdvertCard(adverts[advertIndex]);
       }
     });
   });
