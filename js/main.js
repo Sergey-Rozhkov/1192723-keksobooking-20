@@ -446,13 +446,15 @@ var bindMapPinEvents = function (adverts) {
   mapPinElements.forEach(function (mapPin) {
     mapPin.addEventListener('click', function (evt) {
       var advertIndex = evt.currentTarget.dataset.advert;
-      showAdvertCard(adverts[advertIndex]);
+      var advertCard = renderAdvertCard(adverts[advertIndex]);
+      showAdvertCard(advertCard);
     });
 
     mapPin.addEventListener('keydown', function (evt) {
       if (evt.key === 'Enter') {
         var advertIndex = evt.currentTarget.dataset.advert;
-        showAdvertCard(adverts[advertIndex]);
+        var advertCard = renderAdvertCard(adverts[advertIndex]);
+        showAdvertCard(advertCard);
       }
     });
   });
