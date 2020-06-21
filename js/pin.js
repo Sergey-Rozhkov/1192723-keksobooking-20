@@ -29,8 +29,28 @@ window.pin = (function () {
     return pinElement;
   };
 
+  var bindPinEvents = function (adverts) {
+    var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    mapPinElements.forEach(function (mapPin) {
+      mapPin.addEventListener('click', function (evt) {
+        var advertIndex = evt.currentTarget.dataset.advert;
+        var advertCard = window.card.renderAdvertCard(adverts[advertIndex]);
+        window.card.showAdvertCard(advertCard);
+      });
+
+      mapPin.addEventListener('keydown', function (evt) {
+        if (evt.key === 'Enter') {
+          var advertIndex = evt.currentTarget.dataset.advert;
+          var advertCard = window.card.renderAdvertCard(adverts[advertIndex]);
+          window.card.showAdvertCard(advertCard);
+        }
+      });
+    });
+  };
+
   return {
     renderAdvertPinsOnMap: renderAdvertPinsOnMap,
-    renderAdvertPin: renderAdvertPin
+    renderAdvertPin: renderAdvertPin,
+    bindPinEvents: bindPinEvents
   };
 })();

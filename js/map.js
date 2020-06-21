@@ -9,25 +9,6 @@ window.map = (function () {
     return !mapElement.classList.contains('map--faded');
   };
 
-  var bindMapPinEvents = function (adverts) {
-    var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    mapPinElements.forEach(function (mapPin) {
-      mapPin.addEventListener('click', function (evt) {
-        var advertIndex = evt.currentTarget.dataset.advert;
-        var advertCard = window.card.renderAdvertCard(adverts[advertIndex]);
-        window.card.showAdvertCard(advertCard);
-      });
-
-      mapPin.addEventListener('keydown', function (evt) {
-        if (evt.key === 'Enter') {
-          var advertIndex = evt.currentTarget.dataset.advert;
-          var advertCard = window.card.renderAdvertCard(adverts[advertIndex]);
-          window.card.showAdvertCard(advertCard);
-        }
-      });
-    });
-  };
-
   var isDisabledMap = function () {
     return mapElement.classList.contains('map--faded');
   };
@@ -138,13 +119,11 @@ window.map = (function () {
       return;
     }
 
-    var adverts = window.data.getAdverts();
-    window.pin.renderAdvertPinsOnMap(adverts);
+    window.data.initAdverts();
 
     mapElement.classList.remove('map--faded');
     window.form.enableInputsOnAddForm();
     window.filterForm.enableInputsOnFilterForm();
-    bindMapPinEvents(adverts);
     document.querySelector('.ad-form').classList.remove('ad-form--disabled');
   };
 
