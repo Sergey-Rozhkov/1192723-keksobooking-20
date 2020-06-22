@@ -1,6 +1,7 @@
 'use strict';
 
 window.form = (function () {
+  var initialCoordinates = {};
   var addFormElement = document.querySelector('.ad-form');
   var adFormInputElements = addFormElement.querySelectorAll('.ad-form input');
   var adFormSelectElements = addFormElement.querySelectorAll('.ad-form select');
@@ -9,12 +10,14 @@ window.form = (function () {
   var addFormHousingCapacityElement = document.querySelector('select[name=capacity]');
   var adFormSubmitElement = addFormElement.querySelector('.ad-form__submit');
 
-  var adFormTitleElement = document.querySelector('.ad-form input[name=title]');
-  var adFormTypeElement = document.querySelector('.ad-form [name=type]');
-  var adFormPriceElement = document.querySelector('.ad-form [name=price]');
-  var adFormTimeInElement = document.querySelector('.ad-form [name="timein"]');
-  var adFormTimeOutElement = document.querySelector('.ad-form [name="timeout"]');
-  var addressFieldElement = document.querySelector('input[name=address]');
+  var adFormTitleElement = addFormElement.querySelector('input[name=title]');
+  var adFormTypeElement = addFormElement.querySelector('[name=type]');
+  var adFormPriceElement = addFormElement.querySelector('[name=price]');
+  var adFormTimeInElement = addFormElement.querySelector('[name="timein"]');
+  var adFormTimeOutElement = addFormElement.querySelector('[name="timeout"]');
+  var addressFieldElement = addFormElement.querySelector('input[name=address]');
+
+  var resetFormElement = addFormElement.querySelector('.ad-form__reset');
 
   var addFormSubmit = function (evt) {
     evt.preventDefault();
@@ -22,7 +25,17 @@ window.form = (function () {
       return;
     }
 
-    addFormElement.submit();
+    window.data.saveAdvertForm(new FormData(addFormElement), successHandler, errorHandler);
+  };
+
+  var successHandler = function () {
+    window.notification.showAdvertFormSuccess();
+    resetFormToInit();
+    window.map.deactivateMap();
+  };
+
+  var errorHandler = function () {
+    window.notification.showAdvertFormError();
   };
 
   var validateHousingCapacity = function () {
@@ -81,9 +94,38 @@ window.form = (function () {
     }
   };
 
-  var fillAddressField = function () {
+  var fillAddressField = function (save) {
     var coords = window.map.getMainPinCoordinates();
+
+    if (save) {
+      initialCoordinates = coords;
+    }
+
+    setCoordinatesToField(coords);
+  };
+
+  var setCoordinatesToField = function (coords) {
     addressFieldElement.value = coords.x + ', ' + coords.y;
+  };
+
+  var activateForm = function () {
+    addFormElement.classList.remove('ad-form--disabled');
+    enableInputsOnAddForm();
+  };
+
+  var deactivateForm = function () {
+    addFormElement.classList.add('ad-form--disabled');
+    disableInputsOnAddForm();
+  };
+
+  var resetForm = function () {
+    addFormElement.reset();
+    setCoordinatesToField(initialCoordinates);
+  };
+
+  var resetFormToInit = function () {
+    resetForm();
+    deactivateForm();
   };
 
   addFormHousingRoomsElement.addEventListener('change', validateHousingCapacity);
@@ -123,9 +165,15 @@ window.form = (function () {
     }
   });
 
+  resetFormElement.addEventListener('click', function (evt) {
+    resetForm(evt);
+  });
+
   return {
     disableInputsOnAddForm: disableInputsOnAddForm,
     enableInputsOnAddForm: enableInputsOnAddForm,
-    fillAddressField: fillAddressField
+    fillAddressField: fillAddressField,
+    activateForm: activateForm,
+    deactivateForm: deactivateForm
   };
 })();

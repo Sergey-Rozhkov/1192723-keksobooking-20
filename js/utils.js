@@ -19,9 +19,36 @@ window.utils = (function () {
     return result;
   };
 
+  var prepareRequest = function (successHandler, errorHandler) {
+    var xhr = new XMLHttpRequest();
+
+    xhr.responseType = 'json';
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status === window.constants.XHR_STATUS_SUCCESS) {
+        successHandler(xhr.response);
+      } else {
+        errorHandler('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);
+      }
+    });
+
+    xhr.addEventListener('error', function () {
+      errorHandler('Произошла ошибка соединения');
+    });
+
+    xhr.addEventListener('timeout', function () {
+      errorHandler('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
+    });
+
+    xhr.timeout = window.constants.XHR_TIMEOUT;
+
+    return xhr;
+  };
+
   return {
     getRandomInt: getRandomInt,
     getRandomElement: getRandomElement,
-    getRandomElements: getRandomElements
+    getRandomElements: getRandomElements,
+    prepareRequest: prepareRequest
   };
 })();

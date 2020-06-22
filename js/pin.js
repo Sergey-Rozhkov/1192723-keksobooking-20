@@ -6,12 +6,20 @@ window.pin = (function () {
     .content
     .querySelector('.map__pin');
 
-  var renderAdvertPinsOnMap = function (adverts) {
+  var addPinsOnMap = function () {
     var fragment = document.createDocumentFragment();
-    adverts.forEach(function (advert) {
+    window.data.adverts.forEach(function (advert) {
       fragment.appendChild(renderAdvertPin(advert));
     });
     mapPinsElement.appendChild(fragment);
+    bindPinEvents();
+  };
+
+  var removeAdvertPinsFromMap = function () {
+    var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    mapPinElements.forEach(function (element) {
+      element.remove();
+    });
   };
 
   var renderAdvertPin = function (advert) {
@@ -29,19 +37,19 @@ window.pin = (function () {
     return pinElement;
   };
 
-  var bindPinEvents = function (adverts) {
+  var bindPinEvents = function () {
     var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     mapPinElements.forEach(function (mapPin) {
       mapPin.addEventListener('click', function (evt) {
         var advertIndex = evt.currentTarget.dataset.advert;
-        var advertCard = window.card.renderAdvertCard(adverts[advertIndex]);
+        var advertCard = window.card.renderAdvertCard(window.data.adverts[advertIndex]);
         window.card.showAdvertCard(advertCard);
       });
 
       mapPin.addEventListener('keydown', function (evt) {
         if (evt.key === 'Enter') {
           var advertIndex = evt.currentTarget.dataset.advert;
-          var advertCard = window.card.renderAdvertCard(adverts[advertIndex]);
+          var advertCard = window.card.renderAdvertCard(window.data.adverts[advertIndex]);
           window.card.showAdvertCard(advertCard);
         }
       });
@@ -49,7 +57,8 @@ window.pin = (function () {
   };
 
   return {
-    renderAdvertPinsOnMap: renderAdvertPinsOnMap,
+    addPinsOnMap: addPinsOnMap,
+    removeAdvertPinsFromMap: removeAdvertPinsFromMap,
     renderAdvertPin: renderAdvertPin,
     bindPinEvents: bindPinEvents
   };
