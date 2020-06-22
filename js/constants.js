@@ -121,6 +121,11 @@ window.constants = (function () {
   };
   var MAX_ADVERT_PRICE_VALUE = 1000000;
 
+  var XHR_API_URL = 'https://javascript.pages.academy/keksobooking';
+  var XHR_TIMEOUT = 5000;
+  var XHR_STATUS_SUCCESS = 200;
+
+
   return {
     TITLES: TITLES,
     DESCRIPTIONS: DESCRIPTIONS,
@@ -147,5 +152,8 @@ window.constants = (function () {
     MAX_ADVERT_TITLE_LENGTH: MAX_ADVERT_TITLE_LENGTH,
     TYPE_ADVERT_MIN_PRICE: TYPE_ADVERT_MIN_PRICE,
     MAX_ADVERT_PRICE_VALUE: MAX_ADVERT_PRICE_VALUE,
+    XHR_API_URL: XHR_API_URL,
+    XHR_TIMEOUT: XHR_TIMEOUT,
+    XHR_STATUS_SUCCESS: XHR_STATUS_SUCCESS
   };
 })();
