@@ -119,12 +119,46 @@ window.map = (function () {
       return;
     }
 
-    window.data.initAdverts();
+    window.data.initAdverts(successHandler, errorHandler);
 
     mapElement.classList.remove('map--faded');
-    window.form.enableInputsOnAddForm();
     window.filterForm.enableInputsOnFilterForm();
-    document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+    window.form.activateForm();
+  };
+
+  var deactivateMap = function () {
+    window.form.deactivateForm();
+    window.filterForm.disableInputsOnFilterForm();
+    mapElement.classList.add('map--faded');
+    window.data.adverts = [];
+    window.pin.removeAdvertPinsFromMap();
+  };
+
+  var successHandler = function (response) {
+    var adverts = window.utils.getRandomElements(response, window.constants.ADVERTS_COUNT);
+
+    if (Array.isArray(adverts)) {
+      adverts.map(function (advert, index) {
+        advert.id = index;
+        return advert;
+      });
+
+      window.data.adverts = adverts;
+    }
+
+    window.pin.addPinsOnMap();
+  };
+
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = '0';
+    node.style.right = '0';
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
   };
 
   mainPinElement.addEventListener('keydown', function (evt) {
@@ -134,6 +168,7 @@ window.map = (function () {
   });
 
   return {
-    getMainPinCoordinates: getMainPinCoordinates
+    getMainPinCoordinates: getMainPinCoordinates,
+    deactivateMap: deactivateMap
   };
 })();
