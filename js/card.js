@@ -126,6 +126,7 @@ window.card = (function () {
 
   return {
     renderAdvertCard: renderAdvertCard,
-    showAdvertCard: showAdvertCard
+    showAdvertCard: showAdvertCard,
+    closeAdvertCard: closeAdvertCard
   };
 })();

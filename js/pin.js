@@ -6,9 +6,9 @@ window.pin = (function () {
     .content
     .querySelector('.map__pin');
 
-  var addPinsOnMap = function () {
+  var addPinsOnMap = function (adverts) {
     var fragment = document.createDocumentFragment();
-    window.data.adverts.forEach(function (advert) {
+    adverts.forEach(function (advert) {
       fragment.appendChild(renderAdvertPin(advert));
     });
     mapPinsElement.appendChild(fragment);

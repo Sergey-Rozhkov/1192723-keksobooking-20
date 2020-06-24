@@ -1,8 +1,11 @@
 'use strict';
 
 window.filterForm = (function () {
+  var filterFormElement = document.querySelector('.map__filters');
   var filterFormInputElements = document.querySelectorAll('.map__filters input');
   var filterFormSelectElements = document.querySelectorAll('.map__filters select');
+  var filterFormTypeElement = filterFormElement.querySelector('[name=housing-type]');
+  var lastTimeout;
 
   var enableInputsOnFilterForm = function () {
     window.formUtils.enableInputs(filterFormInputElements);
@@ -14,8 +17,39 @@ window.filterForm = (function () {
     window.formUtils.disableInputs(filterFormSelectElements);
   };
 
+  var filterAdverts = function () {
+    window.pin.removeAdvertPinsFromMap();
+
+    var selectedType = filterFormTypeElement.value;
+    var sameAdverts = window.data.adverts.filter(function (advert) {
+      if (selectedType === window.constants.SIMILAR_ADVERTS_TYPE_ALL) {
+        return true;
+      }
+
+      return advert.offer.type === selectedType;
+    });
+
+    sameAdverts = sameAdverts.slice(0, window.constants.MAX_SIMILAR_ADVERTS);
+
+    window.pin.addPinsOnMap(sameAdverts);
+  };
+
+  filterFormElement.addEventListener('change', function () {
+    window.card.closeAdvertCard();
+  });
+
+  filterFormTypeElement.addEventListener('change', function () {
+    if (lastTimeout) {
+      window.clearTimeout(lastTimeout);
+    }
+    lastTimeout = window.setTimeout(function () {
+      filterAdverts();
+    }, window.constants.SIMILAR_ADVERTS_DEBOUNCE_TIME);
+  });
+
   return {
     enableInputsOnFilterForm: enableInputsOnFilterForm,
-    disableInputsOnFilterForm: disableInputsOnFilterForm
+    disableInputsOnFilterForm: disableInputsOnFilterForm,
+    filterAdverts: filterAdverts
   };
 })();
