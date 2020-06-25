@@ -127,7 +127,7 @@ window.constants = (function () {
 
   var MAX_SIMILAR_ADVERTS = 5;
   var SIMILAR_ADVERTS_TYPE_ALL = 'any';
-  var SIMILAR_ADVERTS_DEBOUNCE_TIME = 5000; // Added temporary, to check debounce, need change to 500
+  var SIMILAR_ADVERTS_DEBOUNCE_TIME = 500;
 
   return {
     TITLES: TITLES,
