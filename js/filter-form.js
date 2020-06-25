@@ -5,7 +5,6 @@ window.filterForm = (function () {
   var filterFormInputElements = document.querySelectorAll('.map__filters input');
   var filterFormSelectElements = document.querySelectorAll('.map__filters select');
   var filterFormTypeElement = filterFormElement.querySelector('[name=housing-type]');
-  var lastTimeout;
 
   var enableInputsOnFilterForm = function () {
     window.formUtils.enableInputs(filterFormInputElements);
@@ -39,12 +38,7 @@ window.filterForm = (function () {
   });
 
   filterFormTypeElement.addEventListener('change', function () {
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
-    }
-    lastTimeout = window.setTimeout(function () {
-      filterAdverts();
-    }, window.constants.SIMILAR_ADVERTS_DEBOUNCE_TIME);
+    window.debounce(filterAdverts);
   });
 
   return {
