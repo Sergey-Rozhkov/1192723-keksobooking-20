@@ -29,8 +29,8 @@ window.pin = (function () {
     image.src = advert.author.avatar;
     image.alt = advert.offer.title;
 
-    pinElement.style.left = advert.location.x - (image.width / 2) + 'px';
-    pinElement.style.top = advert.location.y - image.height + 'px';
+    pinElement.style.left = advert.location.x - (window.constants.PIN_WIDTH / 2) + 'px';
+    pinElement.style.top = advert.location.y - window.constants.PIN_HEIGHT + 'px';
 
     pinElement.dataset.advert = advert.id;
 
