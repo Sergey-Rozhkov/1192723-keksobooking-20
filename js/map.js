@@ -144,9 +144,8 @@ window.map = (function () {
       });
 
       window.data.adverts = adverts;
+      window.filterForm.filterAdverts();
     }
-
-    window.pin.addPinsOnMap();
   };
 
   var errorHandler = function (errorMessage) {
