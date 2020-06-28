@@ -115,6 +115,7 @@ window.card = (function () {
       openedCardElement.remove();
     }
     document.removeEventListener('keydown', advertCardEscPress);
+    window.pin.removeActiveClass();
   };
 
   var advertCardEscPress = function (evt) {

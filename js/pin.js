@@ -37,20 +37,31 @@ window.pin = (function () {
     return pinElement;
   };
 
+  var pinHandler = function (evt) {
+    removeActiveClass();
+    var advertIndex = evt.currentTarget.dataset.advert;
+    var advertCard = window.card.renderAdvertCard(window.data.adverts[advertIndex]);
+    window.card.showAdvertCard(advertCard);
+    evt.currentTarget.classList.add('map__pin--active');
+  };
+
+  var removeActiveClass = function () {
+    var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    mapPinElements.forEach(function (mapPin) {
+      mapPin.classList.remove('map__pin--active');
+    });
+  };
+
   var bindPinEvents = function () {
     var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     mapPinElements.forEach(function (mapPin) {
       mapPin.addEventListener('click', function (evt) {
-        var advertIndex = evt.currentTarget.dataset.advert;
-        var advertCard = window.card.renderAdvertCard(window.data.adverts[advertIndex]);
-        window.card.showAdvertCard(advertCard);
+        pinHandler(evt);
       });
 
       mapPin.addEventListener('keydown', function (evt) {
         if (evt.key === 'Enter') {
-          var advertIndex = evt.currentTarget.dataset.advert;
-          var advertCard = window.card.renderAdvertCard(window.data.adverts[advertIndex]);
-          window.card.showAdvertCard(advertCard);
+          pinHandler(evt);
         }
       });
     });
@@ -60,6 +71,7 @@ window.pin = (function () {
     addPinsOnMap: addPinsOnMap,
     removeAdvertPinsFromMap: removeAdvertPinsFromMap,
     renderAdvertPin: renderAdvertPin,
-    bindPinEvents: bindPinEvents
+    bindPinEvents: bindPinEvents,
+    removeActiveClass: removeActiveClass
   };
 })();
