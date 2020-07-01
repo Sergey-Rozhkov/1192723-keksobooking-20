@@ -7,6 +7,12 @@ window.formUtils = (function () {
     });
   };
 
+  var disableButtons = function (elements) {
+    elements.forEach(function (btn) {
+      addDisable(btn);
+    });
+  };
+
   var addDisable = function (element) {
     element.disabled = true;
   };
@@ -17,12 +23,20 @@ window.formUtils = (function () {
     });
   };
 
+  var enableButtons = function (elements) {
+    elements.forEach(function (btn) {
+      removeDisable(btn);
+    });
+  };
+
   var removeDisable = function (element) {
     element.disabled = false;
   };
 
   return {
     disableInputs: disableInputs,
-    enableInputs: enableInputs
+    enableInputs: enableInputs,
+    disableButtons: disableButtons,
+    enableButtons: enableButtons
   };
 })();

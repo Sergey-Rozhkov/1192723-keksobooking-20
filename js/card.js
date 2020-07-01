@@ -6,35 +6,35 @@ window.card = (function () {
     .content
     .querySelector('.map__card');
 
-  var renderAdvertCard = function (advert) {
+  var render = function (advert) {
     var cardElement = advertCardTemplateElement.cloneNode(true);
 
-    addTextContentToPopupCard(advert.offer.title, cardElement.querySelector('.popup__title'));
+    addTextContent(advert.offer.title, cardElement.querySelector('.popup__title'));
 
-    addTextContentToPopupCard(advert.offer.address, cardElement.querySelector('.popup__text--address'));
+    addTextContent(advert.offer.address, cardElement.querySelector('.popup__text--address'));
 
-    addTextContentToPopupCard(advert.offer.price + ' ₽/ночь', cardElement.querySelector('.popup__text--price'));
+    addTextContent(advert.offer.price + ' ₽/ночь', cardElement.querySelector('.popup__text--price'));
 
-    renderAdvertTypeForCard(advert, cardElement);
+    renderAdvertType(advert, cardElement);
 
     var capacityText = advert.offer.rooms + ' комнаты для ' + advert.offer.guests + ' гостей';
-    addTextContentToPopupCard(capacityText, cardElement.querySelector('.popup__text--capacity'));
+    addTextContent(capacityText, cardElement.querySelector('.popup__text--capacity'));
 
     var timeText = 'Заезд после ' + advert.offer.checkin + ', выезд до ' + advert.offer.checkout;
-    addTextContentToPopupCard(timeText, cardElement.querySelector('.popup__text--time'));
+    addTextContent(timeText, cardElement.querySelector('.popup__text--time'));
 
-    renderAdvertFeaturesForCard(advert, cardElement);
+    renderAdvertFeatures(advert, cardElement);
 
-    addTextContentToPopupCard(advert.offer.description, cardElement.querySelector('.popup__description'));
+    addTextContent(advert.offer.description, cardElement.querySelector('.popup__description'));
 
-    addTextContentToPopupCard(advert.author.avatar, cardElement.querySelector('.popup__avatar'));
+    addTextContent(advert.author.avatar, cardElement.querySelector('.popup__avatar'));
 
-    renderAdvertPhotosForCard(advert, cardElement);
+    renderAdvertPhotos(advert, cardElement);
 
     return cardElement;
   };
 
-  var addTextContentToPopupCard = function (content, element) {
+  var addTextContent = function (content, element) {
     if (typeof content !== 'undefined' && content !== '') {
       element.textContent = content;
     } else {
@@ -42,7 +42,7 @@ window.card = (function () {
     }
   };
 
-  var renderAdvertTypeForCard = function (advert, cardElement) {
+  var renderAdvertType = function (advert, cardElement) {
     var popupTypeElement = cardElement.querySelector('.popup__type');
     if (advert.offer.type !== '' && typeof window.constants.ADVERT_TYPES_TEXT[advert.offer.type] !== 'undefined') {
       popupTypeElement.textContent = window.constants.ADVERT_TYPES_TEXT[advert.offer.type];
@@ -51,7 +51,7 @@ window.card = (function () {
     }
   };
 
-  var renderAdvertFeaturesForCard = function (advert, cardElement) {
+  var renderAdvertFeatures = function (advert, cardElement) {
     var advertCardFeaturesElement = cardElement.querySelector('.popup__features');
     if (advert.offer.features.length > 0) {
       var fragment = document.createDocumentFragment();
@@ -76,7 +76,7 @@ window.card = (function () {
     return advertFeatureElement;
   };
 
-  var renderAdvertPhotosForCard = function (advert, cardElement) {
+  var renderAdvertPhotos = function (advert, cardElement) {
     var advertCardPhotosElement = cardElement.querySelector('.popup__photos');
     if (advert.offer.photos.length > 0) {
       var fragment = document.createDocumentFragment();
@@ -100,34 +100,34 @@ window.card = (function () {
     return advertImgElement;
   };
 
-  var showAdvertCard = function (advertCard) {
-    closeAdvertCard();
+  var show = function (advertCard) {
+    close();
     mapPinsElement.insertAdjacentElement('afterend', advertCard);
 
     var popupCardCloseElement = document.querySelector('.popup__close');
-    popupCardCloseElement.addEventListener('click', closeAdvertCard);
-    document.addEventListener('keydown', advertCardEscPress);
+    popupCardCloseElement.addEventListener('click', close);
+    document.addEventListener('keydown', advertCardEscPressHandler);
   };
 
-  var closeAdvertCard = function () {
+  var close = function () {
     var openedCardElement = document.querySelector('.map__card');
     if (openedCardElement) {
       openedCardElement.remove();
     }
-    document.removeEventListener('keydown', advertCardEscPress);
+    document.removeEventListener('keydown', advertCardEscPressHandler);
     window.pin.removeActiveClass();
   };
 
-  var advertCardEscPress = function (evt) {
+  var advertCardEscPressHandler = function (evt) {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      closeAdvertCard();
+      close();
     }
   };
 
   return {
-    renderAdvertCard: renderAdvertCard,
-    showAdvertCard: showAdvertCard,
-    closeAdvertCard: closeAdvertCard
+    render: render,
+    show: show,
+    close: close
   };
 })();
