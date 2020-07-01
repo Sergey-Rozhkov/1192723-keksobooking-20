@@ -37,7 +37,7 @@ window.pin = (function () {
     return pinElement;
   };
 
-  var pinHandler = function (evt) {
+  var showAdvertInfo = function (evt) {
     removeActiveClass();
     var advertIndex = evt.currentTarget.dataset.advert;
     var advertCard = window.card.renderAdvertCard(window.data.adverts[advertIndex]);
@@ -56,12 +56,12 @@ window.pin = (function () {
     var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     mapPinElements.forEach(function (mapPin) {
       mapPin.addEventListener('click', function (evt) {
-        pinHandler(evt);
+        showAdvertInfo(evt);
       });
 
       mapPin.addEventListener('keydown', function (evt) {
         if (evt.key === 'Enter') {
-          pinHandler(evt);
+          showAdvertInfo(evt);
         }
       });
     });

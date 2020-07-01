@@ -4,6 +4,7 @@ window.map = (function () {
   var mapElement = document.querySelector('.map');
   var mapWidth = mapElement.clientWidth;
   var mainPinElement = document.querySelector('.map__pin--main');
+  var mainPinInitialPosition = {};
 
   var isActiveMap = function () {
     return !mapElement.classList.contains('map--faded');
@@ -17,7 +18,7 @@ window.map = (function () {
     if (isDisabledMap()) {
       return {
         x: mainPinElement.offsetLeft + window.constants.MAIN_PIN_DISABLED_WIDTH / 2,
-        y: mainPinElement.offsetTop + window.constants.MAIN_PIN_DISABLED_HEIGHT
+        y: mainPinElement.offsetTop + window.constants.MAIN_PIN_DISABLED_HEIGHT / 2
       };
     }
 
@@ -119,19 +120,23 @@ window.map = (function () {
       return;
     }
 
+    mainPinInitialPosition = {
+      left: mainPinElement.style.left,
+      top: mainPinElement.style.top
+    };
+
     window.data.initAdverts(successHandler, errorHandler);
 
     mapElement.classList.remove('map--faded');
-    window.filterForm.enableInputsOnFilterForm();
     window.form.activateForm();
   };
 
   var deactivateMap = function () {
-    window.form.deactivateForm();
     window.filterForm.disableInputsOnFilterForm();
     mapElement.classList.add('map--faded');
     window.data.adverts = [];
-    window.pin.removeAdvertPinsFromMap();
+    mainPinElement.style.left = mainPinInitialPosition.left;
+    mainPinElement.style.top = mainPinInitialPosition.top;
   };
 
   var successHandler = function (response) {
@@ -145,6 +150,7 @@ window.map = (function () {
 
       window.data.adverts = adverts;
       window.filterForm.filterAdverts();
+      window.filterForm.enableInputsOnFilterForm();
     }
   };
 

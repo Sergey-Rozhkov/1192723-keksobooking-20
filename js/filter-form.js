@@ -25,7 +25,7 @@ window.filterForm = (function () {
 
     var sameAdverts = window.data.adverts.filter(function (advert) {
       return checkAdvertType(advert) && checkAdvertPrice(advert)
-        && checkAdvertRooms(advert) && checkAdvertGuests(advert) && checkAdvertFeatures(advert);
+        && checkAdvertRooms(advert) && checkAdvertGuests(advert) && checkAdvertFeatures(advert) && advert.offer;
     });
 
     sameAdverts = sameAdverts.slice(0, window.constants.MAX_SIMILAR_ADVERTS);
@@ -90,6 +90,9 @@ window.filterForm = (function () {
     return selectedOptions.length === featureList.length;
   };
 
+  var resetForm = function () {
+    filterFormElement.reset();
+  };
 
   filterFormElement.addEventListener('change', function () {
     window.card.closeAdvertCard();
@@ -99,6 +102,7 @@ window.filterForm = (function () {
   return {
     enableInputsOnFilterForm: enableInputsOnFilterForm,
     disableInputsOnFilterForm: disableInputsOnFilterForm,
-    filterAdverts: filterAdverts
+    filterAdverts: filterAdverts,
+    resetForm: resetForm
   };
 })();
