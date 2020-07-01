@@ -32,6 +32,7 @@ window.form = (function () {
   var addFormSubmit = function (evt) {
     evt.preventDefault();
     if (!addFormElement.checkValidity()) {
+      checkFormElements();
       return;
     }
 
@@ -45,6 +46,28 @@ window.form = (function () {
 
   var errorSubmitHandler = function () {
     window.notification.showAdvertFormError();
+  };
+
+  var checkElementError = function (element) {
+    if (!element.checkValidity()) {
+      addErrorClassToElement(element);
+    } else {
+      removeErrorClassFromElement(element);
+    }
+  };
+
+  var checkFormElements = function () {
+    adFormInputElements.forEach(function (element) {
+      checkElementError(element);
+    });
+  };
+
+  var addErrorClassToElement = function (element) {
+    element.classList.add(window.constants.FORM_ELEMENT_ERROR_CLASS);
+  };
+
+  var removeErrorClassFromElement = function (element) {
+    element.classList.remove(window.constants.FORM_ELEMENT_ERROR_CLASS);
   };
 
   var validateHousingCapacity = function () {
@@ -62,6 +85,7 @@ window.form = (function () {
     } else {
       addFormHousingCapacityElement.setCustomValidity('');
     }
+    checkElementError(addFormHousingCapacityElement);
   };
 
   var disableInputsOnAddForm = function () {
@@ -94,6 +118,7 @@ window.form = (function () {
     } else {
       adFormPriceElement.setCustomValidity('');
     }
+    checkElementError(adFormPriceElement);
   };
 
   var validateTime = function (evt) {
