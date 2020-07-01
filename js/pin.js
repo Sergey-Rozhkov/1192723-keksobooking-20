@@ -6,7 +6,7 @@ window.pin = (function () {
     .content
     .querySelector('.map__pin');
 
-  var addPinsOnMap = function (adverts) {
+  var addPins = function (adverts) {
     var fragment = document.createDocumentFragment();
     adverts.forEach(function (advert) {
       fragment.appendChild(renderAdvertPin(advert));
@@ -15,7 +15,7 @@ window.pin = (function () {
     bindPinEvents();
   };
 
-  var removeAdvertPinsFromMap = function () {
+  var removePins = function () {
     var mapPinElements = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     mapPinElements.forEach(function (element) {
       element.remove();
@@ -40,8 +40,8 @@ window.pin = (function () {
   var showAdvertInfo = function (evt) {
     removeActiveClass();
     var advertIndex = evt.currentTarget.dataset.advert;
-    var advertCard = window.card.renderAdvertCard(window.data.adverts[advertIndex]);
-    window.card.showAdvertCard(advertCard);
+    var advertCard = window.card.render(window.data.adverts[advertIndex]);
+    window.card.show(advertCard);
     evt.currentTarget.classList.add('map__pin--active');
   };
 
@@ -68,8 +68,8 @@ window.pin = (function () {
   };
 
   return {
-    addPinsOnMap: addPinsOnMap,
-    removeAdvertPinsFromMap: removeAdvertPinsFromMap,
+    addPins: addPins,
+    removePins: removePins,
     renderAdvertPin: renderAdvertPin,
     bindPinEvents: bindPinEvents,
     removeActiveClass: removeActiveClass

@@ -29,7 +29,7 @@ window.form = (function () {
     var defaultAvatarImageSrc = adFormAvatarPreviewElement.getAttribute('src');
   }
 
-  var addFormSubmit = function (evt) {
+  var submitHandler = function (evt) {
     evt.preventDefault();
     validatePrice();
     validateHousingCapacity();
@@ -95,14 +95,14 @@ window.form = (function () {
     }
   };
 
-  var disableInputsOnAddForm = function () {
+  var disableInputs = function () {
     window.formUtils.disableInputs(adFormInputElements);
     window.formUtils.disableInputs(adFormSelectElements);
     window.formUtils.disableInputs(adFormTextareaElements);
     window.formUtils.disableButtons(adFormButtonElements);
   };
 
-  var enableInputsOnAddForm = function () {
+  var enableInputs = function () {
     window.formUtils.enableInputs(adFormInputElements);
     window.formUtils.enableInputs(adFormSelectElements);
     window.formUtils.enableInputs(adFormTextareaElements);
@@ -153,26 +153,22 @@ window.form = (function () {
     addressFieldElement.value = coords.x + ', ' + coords.y;
   };
 
-  var activateForm = function () {
+  var activate = function () {
     addFormElement.classList.remove('ad-form--disabled');
-    enableInputsOnAddForm();
+    enableInputs();
   };
 
-  var deactivateForm = function () {
-    resetForm();
+  var deactivate = function () {
+    reset();
     addFormElement.classList.add('ad-form--disabled');
-    disableInputsOnAddForm();
+    disableInputs();
   };
 
-  var resetForm = function () {
+  var reset = function () {
     addFormElement.reset();
     resetAvatarToDefault();
     resetImageToDefault();
     setCoordinatesToField(initialCoordinates);
-  };
-
-  var isFunction = function (func) {
-    return func && typeof func === 'function';
   };
 
   var isImageFile = function (file) {
@@ -214,20 +210,20 @@ window.form = (function () {
     var reader = new FileReader();
 
     if (!isImageFile(file)) {
-      if (isFunction(errorHandler)) {
+      if (window.utils.isFunction(errorHandler)) {
         errorHandler(reader.result);
       }
       return;
     }
 
     reader.addEventListener('load', function () {
-      if (isFunction(successHandler)) {
+      if (window.utils.isFunction(successHandler)) {
         successHandler(reader.result);
       }
     });
 
     reader.addEventListener('error', function () {
-      if (isFunction(errorHandler)) {
+      if (window.utils.isFunction(errorHandler)) {
         errorHandler(reader.result);
       }
     });
@@ -237,7 +233,7 @@ window.form = (function () {
 
   addFormHousingRoomsElement.addEventListener('change', validateHousingCapacity);
   addFormHousingCapacityElement.addEventListener('change', validateHousingCapacity);
-  adFormSubmitElement.addEventListener('click', addFormSubmit);
+  adFormSubmitElement.addEventListener('click', submitHandler);
 
   adFormTypeElement.addEventListener('change', validatePrice);
   adFormPriceElement.addEventListener('input', validatePrice);
@@ -282,10 +278,9 @@ window.form = (function () {
   });
 
   return {
-    disableInputsOnAddForm: disableInputsOnAddForm,
-    enableInputsOnAddForm: enableInputsOnAddForm,
+    disableInputs: disableInputs,
     fillAddressField: fillAddressField,
-    activateForm: activateForm,
-    deactivateForm: deactivateForm
+    activate: activate,
+    deactivate: deactivate
   };
 })();

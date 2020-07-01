@@ -45,10 +45,15 @@ window.utils = (function () {
     return xhr;
   };
 
+  var isFunction = function (func) {
+    return func && typeof func === 'function';
+  };
+
   return {
     getRandomInt: getRandomInt,
     getRandomElement: getRandomElement,
     getRandomElements: getRandomElements,
-    prepareRequest: prepareRequest
+    prepareRequest: prepareRequest,
+    isFunction: isFunction
   };
 })();

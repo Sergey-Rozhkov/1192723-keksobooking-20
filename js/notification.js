@@ -12,7 +12,7 @@ window.notification = (function () {
   var mainElement = document.querySelector('main');
   var errorBtnElement;
 
-  var removeSuccessMessageByEsc = function (evt) {
+  var successMessageEscPressHandler = function (evt) {
     if (evt.key === 'Escape') {
       removeSuccessMessage();
     }
@@ -20,14 +20,14 @@ window.notification = (function () {
 
   var removeSuccessMessage = function () {
     document.querySelector('.success').remove();
-    document.removeEventListener('keydown', removeSuccessMessageByEsc);
+    document.removeEventListener('keydown', successMessageEscPressHandler);
     document.removeEventListener('click', removeSuccessMessage);
   };
 
   var showAdvertFormSuccess = function () {
     var successElement = notificationSuccessElement.cloneNode(true);
     document.body.insertAdjacentElement('afterbegin', successElement);
-    document.addEventListener('keydown', removeSuccessMessageByEsc);
+    document.addEventListener('keydown', successMessageEscPressHandler);
     document.addEventListener('click', removeSuccessMessage);
   };
 
@@ -35,19 +35,19 @@ window.notification = (function () {
     var errorElement = notificationErrorElement.cloneNode(true);
     mainElement.insertAdjacentElement('afterbegin', errorElement);
     errorBtnElement = document.querySelector('.error__button');
-    document.addEventListener('keydown', removeErrorMessageByEsc);
+    document.addEventListener('keydown', errorMessageEscPressHandler);
     errorBtnElement.addEventListener('click', removeErrorMessage);
     document.addEventListener('click', removeErrorMessage);
   };
 
   var removeErrorMessage = function () {
     document.querySelector('.error').remove();
-    document.removeEventListener('keydown', removeErrorMessageByEsc);
+    document.removeEventListener('keydown', errorMessageEscPressHandler);
     errorBtnElement.removeEventListener('click', removeErrorMessage);
     document.removeEventListener('click', removeErrorMessage);
   };
 
-  var removeErrorMessageByEsc = function (evt) {
+  var errorMessageEscPressHandler = function (evt) {
     if (evt.key === 'Escape') {
       removeErrorMessage();
     }

@@ -10,18 +10,18 @@ window.filterForm = (function () {
   var filterFormGuestsElement = filterFormElement.querySelector('[name=housing-guests]');
   var filterFormFeaturesElements = filterFormElement.querySelectorAll('[name=features]');
 
-  var enableInputsOnFilterForm = function () {
+  var enableInputs = function () {
     window.formUtils.enableInputs(filterFormInputElements);
     window.formUtils.enableInputs(filterFormSelectElements);
   };
 
-  var disableInputsOnFilterForm = function () {
+  var disableInputs = function () {
     window.formUtils.disableInputs(filterFormInputElements);
     window.formUtils.disableInputs(filterFormSelectElements);
   };
 
   var filterAdverts = function () {
-    window.pin.removeAdvertPinsFromMap();
+    window.pin.removePins();
 
     var sameAdverts = window.data.adverts.filter(function (advert) {
       return checkAdvertType(advert) && checkAdvertPrice(advert)
@@ -30,7 +30,7 @@ window.filterForm = (function () {
 
     sameAdverts = sameAdverts.slice(0, window.constants.MAX_SIMILAR_ADVERTS);
 
-    window.pin.addPinsOnMap(sameAdverts);
+    window.pin.addPins(sameAdverts);
   };
 
   var isOptionAll = function (value) {
@@ -90,19 +90,19 @@ window.filterForm = (function () {
     return selectedOptions.length === featureList.length;
   };
 
-  var resetForm = function () {
+  var reset = function () {
     filterFormElement.reset();
   };
 
   filterFormElement.addEventListener('change', function () {
-    window.card.closeAdvertCard();
+    window.card.close();
     window.debounce(filterAdverts);
   });
 
   return {
-    enableInputsOnFilterForm: enableInputsOnFilterForm,
-    disableInputsOnFilterForm: disableInputsOnFilterForm,
+    enableInputs: enableInputs,
+    disableInputs: disableInputs,
     filterAdverts: filterAdverts,
-    resetForm: resetForm
+    reset: reset
   };
 })();

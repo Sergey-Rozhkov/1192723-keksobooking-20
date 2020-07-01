@@ -2,17 +2,17 @@
 
 window.app = (function () {
   var init = function () {
-    window.form.disableInputsOnAddForm();
-    window.filterForm.disableInputsOnFilterForm();
+    window.form.disableInputs();
+    window.filterForm.disableInputs();
     window.form.fillAddressField(true);
   };
 
   var setNotActiveState = function () {
-    window.pin.removeAdvertPinsFromMap();
-    window.card.closeAdvertCard();
-    window.map.deactivateMap();
-    window.form.deactivateForm();
-    window.filterForm.resetForm();
+    window.pin.removePins();
+    window.card.close();
+    window.map.deactivate();
+    window.form.deactivate();
+    window.filterForm.reset();
   };
 
   return {
