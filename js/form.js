@@ -31,6 +31,8 @@ window.form = (function () {
 
   var addFormSubmit = function (evt) {
     evt.preventDefault();
+    validatePrice();
+    validateHousingCapacity();
     if (!addFormElement.checkValidity()) {
       checkFormElements();
       return;
@@ -57,8 +59,11 @@ window.form = (function () {
   };
 
   var checkFormElements = function () {
-    adFormInputElements.forEach(function (element) {
-      checkElementError(element);
+    Array.from(addFormElement.elements).forEach(function (element) {
+      var tag = element.tagName.toLowerCase();
+      if (window.constants.FORM_ELEMENTS_TO_VALIDATE.indexOf(tag) !== -1) {
+        checkElementError(element);
+      }
     });
   };
 
@@ -70,7 +75,7 @@ window.form = (function () {
     element.classList.remove(window.constants.FORM_ELEMENT_ERROR_CLASS);
   };
 
-  var validateHousingCapacity = function () {
+  var validateHousingCapacity = function (evt) {
     var roomsCount = addFormHousingRoomsElement.value;
     var capacityCount = addFormHousingCapacityElement.value;
     if (roomsCount < window.constants.NOT_FOR_GUESTS_ROOMS_COUNT) {
@@ -85,7 +90,9 @@ window.form = (function () {
     } else {
       addFormHousingCapacityElement.setCustomValidity('');
     }
-    checkElementError(addFormHousingCapacityElement);
+    if (evt) {
+      checkElementError(addFormHousingCapacityElement);
+    }
   };
 
   var disableInputsOnAddForm = function () {
@@ -102,7 +109,7 @@ window.form = (function () {
     window.formUtils.enableButtons(adFormButtonElements);
   };
 
-  var validatePrice = function () {
+  var validatePrice = function (evt) {
     var advertType = adFormTypeElement.value;
     var advertTypeMinPrice = window.constants.TYPE_ADVERT_MIN_PRICE[advertType];
     var advertPriceValue = adFormPriceElement.value;
@@ -118,7 +125,9 @@ window.form = (function () {
     } else {
       adFormPriceElement.setCustomValidity('');
     }
-    checkElementError(adFormPriceElement);
+    if (evt) {
+      checkElementError(adFormPriceElement);
+    }
   };
 
   var validateTime = function (evt) {
@@ -232,12 +241,8 @@ window.form = (function () {
 
   adFormTypeElement.addEventListener('change', validatePrice);
   adFormPriceElement.addEventListener('input', validatePrice);
-  adFormTimeInElement.addEventListener('change', function (evt) {
-    validateTime(evt);
-  });
-  adFormTimeOutElement.addEventListener('change', function (evt) {
-    validateTime(evt);
-  });
+  adFormTimeInElement.addEventListener('change', validateTime);
+  adFormTimeOutElement.addEventListener('change', validateTime);
 
   adFormTitleElement.addEventListener('invalid', function () {
     if (adFormTitleElement.validity.tooShort) {
@@ -261,6 +266,7 @@ window.form = (function () {
     } else {
       adFormTitleElement.setCustomValidity('');
     }
+    checkElementError(adFormTitleElement);
   });
 
   resetFormElement.addEventListener('click', function () {
