@@ -2,8 +2,6 @@
 
 window.filterForm = (function () {
   var filterFormElement = document.querySelector('.map__filters');
-  var filterFormInputElements = document.querySelectorAll('.map__filters input');
-  var filterFormSelectElements = document.querySelectorAll('.map__filters select');
   var filterFormTypeElement = filterFormElement.querySelector('[name=housing-type]');
   var filterFormPriceElement = filterFormElement.querySelector('[name=housing-price]');
   var filterFormRoomsElement = filterFormElement.querySelector('[name=housing-rooms]');
@@ -11,13 +9,11 @@ window.filterForm = (function () {
   var filterFormFeaturesElements = filterFormElement.querySelectorAll('[name=features]');
 
   var enableInputs = function () {
-    window.formUtils.enableInputs(filterFormInputElements);
-    window.formUtils.enableInputs(filterFormSelectElements);
+    window.formUtils.enableElements(filterFormElement);
   };
 
   var disableInputs = function () {
-    window.formUtils.disableInputs(filterFormInputElements);
-    window.formUtils.disableInputs(filterFormSelectElements);
+    window.formUtils.disableElements(filterFormElement);
   };
 
   var filterAdverts = function () {
@@ -95,7 +91,7 @@ window.filterForm = (function () {
   };
 
   filterFormElement.addEventListener('change', function () {
-    window.card.close();
+    window.card.closePopup();
     window.debounce(filterAdverts);
   });
 

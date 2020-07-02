@@ -9,7 +9,7 @@ window.app = (function () {
 
   var setNotActiveState = function () {
     window.pin.removePins();
-    window.card.close();
+    window.card.closePopup();
     window.map.deactivate();
     window.form.deactivate();
     window.filterForm.reset();

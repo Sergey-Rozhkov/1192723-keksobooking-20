@@ -3,7 +3,7 @@
 window.data = (function () {
   var adverts = [];
 
-  var load = function (successHandler, errorHandler) {
+  var initAdverts = function (successHandler, errorHandler) {
     var xhr = window.utils.prepareRequest(successHandler, errorHandler);
 
     xhr.open('GET', window.constants.XHR_API_URL + '/data');
@@ -15,10 +15,6 @@ window.data = (function () {
 
     xhr.open('POST', window.constants.XHR_API_URL);
     xhr.send(data);
-  };
-
-  var initAdverts = function (successHandler, errorHandler) {
-    load(successHandler, errorHandler);
   };
 
   return {

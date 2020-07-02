@@ -40,8 +40,7 @@ window.pin = (function () {
   var showAdvertInfo = function (evt) {
     removeActiveClass();
     var advertIndex = evt.currentTarget.dataset.advert;
-    var advertCard = window.card.render(window.data.adverts[advertIndex]);
-    window.card.show(advertCard);
+    window.card.renderPopup(window.data.adverts[advertIndex]);
     evt.currentTarget.classList.add('map__pin--active');
   };
 
