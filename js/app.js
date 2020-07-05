@@ -7,17 +7,8 @@ window.app = (function () {
     window.form.fillAddressField(true);
   };
 
-  var setNotActiveState = function () {
-    window.pin.removePins();
-    window.card.close();
-    window.map.deactivate();
-    window.form.deactivate();
-    window.filterForm.reset();
-  };
-
   return {
-    init: init,
-    setNotActiveState: setNotActiveState
+    init: init
   };
 })();
 

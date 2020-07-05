@@ -3,10 +3,6 @@
 window.form = (function () {
   var initialCoordinates = {};
   var addFormElement = document.querySelector('.ad-form');
-  var adFormInputElements = addFormElement.querySelectorAll('.ad-form input');
-  var adFormSelectElements = addFormElement.querySelectorAll('.ad-form select');
-  var adFormTextareaElements = addFormElement.querySelectorAll('.ad-form textarea');
-  var adFormButtonElements = addFormElement.querySelectorAll('button');
   var addFormHousingRoomsElement = addFormElement.querySelector('select[name=rooms]');
   var addFormHousingCapacityElement = addFormElement.querySelector('select[name=capacity]');
   var adFormSubmitElement = addFormElement.querySelector('.ad-form__submit');
@@ -38,12 +34,12 @@ window.form = (function () {
       return;
     }
 
-    window.data.saveAdvertForm(new FormData(addFormElement), successSubmitHandler, errorSubmitHandler);
+    window.data.saveAdvert(new FormData(addFormElement), successSubmitHandler, errorSubmitHandler);
   };
 
   var successSubmitHandler = function () {
     window.notification.showAdvertFormSuccess();
-    window.app.setNotActiveState();
+    setInactiveState();
   };
 
   var errorSubmitHandler = function () {
@@ -68,11 +64,13 @@ window.form = (function () {
   };
 
   var addErrorClassToElement = function (element) {
-    element.classList.add(window.constants.FORM_ELEMENT_ERROR_CLASS);
+    element.style.outline = 'none';
+    element.style.boxShadow = '0 0 2px 2px #f00';
   };
 
   var removeErrorClassFromElement = function (element) {
-    element.classList.remove(window.constants.FORM_ELEMENT_ERROR_CLASS);
+    element.style.outline = '';
+    element.style.boxShadow = '';
   };
 
   var validateHousingCapacity = function (evt) {
@@ -96,17 +94,7 @@ window.form = (function () {
   };
 
   var disableInputs = function () {
-    window.formUtils.disableInputs(adFormInputElements);
-    window.formUtils.disableInputs(adFormSelectElements);
-    window.formUtils.disableInputs(adFormTextareaElements);
-    window.formUtils.disableButtons(adFormButtonElements);
-  };
-
-  var enableInputs = function () {
-    window.formUtils.enableInputs(adFormInputElements);
-    window.formUtils.enableInputs(adFormSelectElements);
-    window.formUtils.enableInputs(adFormTextareaElements);
-    window.formUtils.enableButtons(adFormButtonElements);
+    window.formUtils.disableElements(addFormElement);
   };
 
   var validatePrice = function (evt) {
@@ -139,10 +127,10 @@ window.form = (function () {
     }
   };
 
-  var fillAddressField = function (save) {
+  var fillAddressField = function (saveCoordinates) {
     var coords = window.map.getMainPinCoordinates();
 
-    if (save) {
+    if (saveCoordinates) {
       initialCoordinates = coords;
     }
 
@@ -155,7 +143,7 @@ window.form = (function () {
 
   var activate = function () {
     addFormElement.classList.remove('ad-form--disabled');
-    enableInputs();
+    window.formUtils.enableElements(addFormElement);
   };
 
   var deactivate = function () {
@@ -169,6 +157,14 @@ window.form = (function () {
     resetAvatarToDefault();
     resetImageToDefault();
     setCoordinatesToField(initialCoordinates);
+  };
+
+  var setInactiveState = function () {
+    window.pin.removePins();
+    window.card.closePopup();
+    window.map.deactivate();
+    window.form.deactivate();
+    window.filterForm.reset();
   };
 
   var isImageFile = function (file) {
@@ -266,7 +262,7 @@ window.form = (function () {
   });
 
   resetFormElement.addEventListener('click', function () {
-    window.app.setNotActiveState();
+    setInactiveState();
   });
 
   adFormAvatarInputElement.addEventListener('change', function (evt) {

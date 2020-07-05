@@ -10,7 +10,7 @@ window.notification = (function () {
     .querySelector('.error');
 
   var mainElement = document.querySelector('main');
-  var errorBtnElement;
+  var errorBtnElement = document.querySelector('.error__button');
 
   var successMessageEscPressHandler = function (evt) {
     if (evt.key === 'Escape') {
@@ -34,7 +34,6 @@ window.notification = (function () {
   var showAdvertFormError = function () {
     var errorElement = notificationErrorElement.cloneNode(true);
     mainElement.insertAdjacentElement('afterbegin', errorElement);
-    errorBtnElement = document.querySelector('.error__button');
     document.addEventListener('keydown', errorMessageEscPressHandler);
     errorBtnElement.addEventListener('click', removeErrorMessage);
     document.addEventListener('click', removeErrorMessage);

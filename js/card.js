@@ -6,7 +6,12 @@ window.card = (function () {
     .content
     .querySelector('.map__card');
 
-  var render = function (advert) {
+  var renderPopup = function (advert) {
+    var advertCard = fillPopup(advert);
+    showPopup(advertCard);
+  };
+
+  var fillPopup = function (advert) {
     var cardElement = advertCardTemplateElement.cloneNode(true);
 
     addTextContent(advert.offer.title, cardElement.querySelector('.popup__title'));
@@ -44,8 +49,10 @@ window.card = (function () {
 
   var renderAdvertType = function (advert, cardElement) {
     var popupTypeElement = cardElement.querySelector('.popup__type');
-    if (advert.offer.type !== '' && typeof window.constants.ADVERT_TYPES_TEXT[advert.offer.type] !== 'undefined') {
-      popupTypeElement.textContent = window.constants.ADVERT_TYPES_TEXT[advert.offer.type];
+    var advertTypeText = window.constants.ADVERT_TYPES_TEXT[advert.offer.type];
+
+    if (advertTypeText) {
+      popupTypeElement.textContent = advertTypeText;
     } else {
       popupTypeElement.remove();
     }
@@ -100,16 +107,16 @@ window.card = (function () {
     return advertImgElement;
   };
 
-  var show = function (advertCard) {
-    close();
+  var showPopup = function (advertCard) {
+    closePopup();
     mapPinsElement.insertAdjacentElement('afterend', advertCard);
 
     var popupCardCloseElement = document.querySelector('.popup__close');
-    popupCardCloseElement.addEventListener('click', close);
+    popupCardCloseElement.addEventListener('click', closePopup);
     document.addEventListener('keydown', advertCardEscPressHandler);
   };
 
-  var close = function () {
+  var closePopup = function () {
     var openedCardElement = document.querySelector('.map__card');
     if (openedCardElement) {
       openedCardElement.remove();
@@ -121,13 +128,12 @@ window.card = (function () {
   var advertCardEscPressHandler = function (evt) {
     if (evt.key === 'Escape') {
       evt.preventDefault();
-      close();
+      closePopup();
     }
   };
 
   return {
-    render: render,
-    show: show,
-    close: close
+    renderPopup: renderPopup,
+    closePopup: closePopup
   };
 })();
