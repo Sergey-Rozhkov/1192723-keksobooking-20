@@ -7,15 +7,15 @@ window.map = (function () {
   var mainPinInitialPosition = {};
 
   var isActive = function () {
-    return !mapElement.classList.contains('map--faded');
+    return !isInactive();
   };
 
-  var isDisabled = function () {
+  var isInactive = function () {
     return mapElement.classList.contains('map--faded');
   };
 
   var getMainPinCoordinates = function () {
-    if (isDisabled()) {
+    if (isInactive()) {
       return {
         x: mainPinElement.offsetLeft + window.constants.MAIN_PIN_DISABLED_WIDTH / 2,
         y: mainPinElement.offsetTop + window.constants.MAIN_PIN_DISABLED_HEIGHT / 2
@@ -42,7 +42,7 @@ window.map = (function () {
 
   mainPinElement.addEventListener('mousedown', function (evt) {
     if (evt.button === 0) {
-      if (isDisabled()) {
+      if (isInactive()) {
         activate();
         window.form.fillAddressField();
       } else {
@@ -125,7 +125,7 @@ window.map = (function () {
       top: mainPinElement.style.top
     };
 
-    window.data.initAdverts(successLoadHandler, errorLoadHandler);
+    window.data.loadAdverts(successLoadHandler, errorLoadHandler);
 
     mapElement.classList.remove('map--faded');
     window.form.activate();
@@ -156,7 +156,10 @@ window.map = (function () {
 
   var errorLoadHandler = function (errorMessage) {
     var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.zIndex = '100';
+    node.style.margin = '0 auto';
+    node.style.backgroundColor = 'red';
+    node.style.textAlign = 'center';
     node.style.position = 'absolute';
     node.style.left = '0';
     node.style.right = '0';

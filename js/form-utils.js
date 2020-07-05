@@ -4,7 +4,7 @@ window.formUtils = (function () {
   var disableElements = function (formElement) {
     Array.from(formElement.elements).forEach(function (element) {
       if (isTagToDisable(element)) {
-        addDisable(element);
+        setDisable(element);
       }
     });
   };
@@ -17,7 +17,7 @@ window.formUtils = (function () {
     });
   };
 
-  var addDisable = function (element) {
+  var setDisable = function (element) {
     element.disabled = true;
   };
 
@@ -32,9 +32,6 @@ window.formUtils = (function () {
 
   return {
     disableElements: disableElements,
-    enableElements: enableElements,
-    addDisable: addDisable,
-    removeDisable: removeDisable,
-    isTagToDisable: isTagToDisable
+    enableElements: enableElements
   };
 })();

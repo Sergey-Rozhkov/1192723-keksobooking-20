@@ -34,12 +34,12 @@ window.form = (function () {
       return;
     }
 
-    window.data.saveAdvertForm(new FormData(addFormElement), successSubmitHandler, errorSubmitHandler);
+    window.data.saveAdvert(new FormData(addFormElement), successSubmitHandler, errorSubmitHandler);
   };
 
   var successSubmitHandler = function () {
     window.notification.showAdvertFormSuccess();
-    window.app.setNotActiveState();
+    setInactiveState();
   };
 
   var errorSubmitHandler = function () {
@@ -127,10 +127,10 @@ window.form = (function () {
     }
   };
 
-  var fillAddressField = function (save) {
+  var fillAddressField = function (saveCoordinates) {
     var coords = window.map.getMainPinCoordinates();
 
-    if (save) {
+    if (saveCoordinates) {
       initialCoordinates = coords;
     }
 
@@ -157,6 +157,14 @@ window.form = (function () {
     resetAvatarToDefault();
     resetImageToDefault();
     setCoordinatesToField(initialCoordinates);
+  };
+
+  var setInactiveState = function () {
+    window.pin.removePins();
+    window.card.closePopup();
+    window.map.deactivate();
+    window.form.deactivate();
+    window.filterForm.reset();
   };
 
   var isImageFile = function (file) {
@@ -254,7 +262,7 @@ window.form = (function () {
   });
 
   resetFormElement.addEventListener('click', function () {
-    window.app.setNotActiveState();
+    setInactiveState();
   });
 
   adFormAvatarInputElement.addEventListener('change', function (evt) {

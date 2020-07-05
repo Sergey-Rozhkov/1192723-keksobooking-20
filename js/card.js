@@ -49,8 +49,10 @@ window.card = (function () {
 
   var renderAdvertType = function (advert, cardElement) {
     var popupTypeElement = cardElement.querySelector('.popup__type');
-    if (advert.offer.type !== '' && typeof window.constants.ADVERT_TYPES_TEXT[advert.offer.type] !== 'undefined') {
-      popupTypeElement.textContent = window.constants.ADVERT_TYPES_TEXT[advert.offer.type];
+    var advertTypeText = window.constants.ADVERT_TYPES_TEXT[advert.offer.type];
+
+    if (advertTypeText) {
+      popupTypeElement.textContent = advertTypeText;
     } else {
       popupTypeElement.remove();
     }
