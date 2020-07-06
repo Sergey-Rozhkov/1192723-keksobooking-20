@@ -170,7 +170,7 @@ window.map = (function () {
   };
 
   mainPinElement.addEventListener('keydown', function (evt) {
-    if (evt.key === 'Enter') {
+    if (window.utils.isEnterPress(evt)) {
       activate();
     }
   });
