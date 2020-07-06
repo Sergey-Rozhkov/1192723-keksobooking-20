@@ -13,7 +13,7 @@ window.notification = (function () {
   var errorBtnElement = document.querySelector('.error__button');
 
   var successMessageEscPressHandler = function (evt) {
-    if (evt.key === 'Escape') {
+    if (window.utils.isEscPress(evt)) {
       removeSuccessMessage();
     }
   };
@@ -47,7 +47,7 @@ window.notification = (function () {
   };
 
   var errorMessageEscPressHandler = function (evt) {
-    if (evt.key === 'Escape') {
+    if (window.utils.isEscPress(evt)) {
       removeErrorMessage();
     }
   };

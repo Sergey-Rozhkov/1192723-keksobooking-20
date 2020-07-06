@@ -126,7 +126,7 @@ window.card = (function () {
   };
 
   var advertCardEscPressHandler = function (evt) {
-    if (evt.key === 'Escape') {
+    if (window.utils.isEscPress(evt)) {
       evt.preventDefault();
       closePopup();
     }

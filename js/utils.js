@@ -49,11 +49,21 @@ window.utils = (function () {
     return func && typeof func === 'function';
   };
 
+  var isEscPress = function (evt) {
+    return evt.key === 'Escape';
+  };
+
+  var isEnterPress = function (evt) {
+    return evt.key === 'Enter';
+  };
+
   return {
     getRandomInt: getRandomInt,
     getRandomElement: getRandomElement,
     getRandomElements: getRandomElements,
     prepareRequest: prepareRequest,
-    isFunction: isFunction
+    isFunction: isFunction,
+    isEscPress: isEscPress,
+    isEnterPress: isEnterPress
   };
 })();
