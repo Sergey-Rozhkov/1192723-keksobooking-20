@@ -12,10 +12,12 @@ window.utils = (function () {
   var getRandomElements = function (arr, count) {
     var tmp = JSON.parse(JSON.stringify(arr));
     var result = [];
+
     for (var i = 0; i < count; i++) {
       var elementInd = window.utils.getRandomInt(0, tmp.length - 1);
       result = result.concat(tmp.splice(elementInd, 1));
     }
+
     return result;
   };
 
