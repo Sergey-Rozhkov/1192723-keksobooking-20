@@ -8,9 +8,11 @@ window.pin = (function () {
 
   var addPins = function (adverts) {
     var fragment = document.createDocumentFragment();
+
     adverts.forEach(function (advert) {
       fragment.appendChild(renderAdvertPin(advert));
     });
+
     mapPinsElement.appendChild(fragment);
     bindPinEvents();
   };
